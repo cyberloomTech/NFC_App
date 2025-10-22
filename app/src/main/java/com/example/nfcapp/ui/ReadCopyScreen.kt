@@ -10,12 +10,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,6 +43,7 @@ fun ReadCopyScreen(
     val nfcText by NFCViewModel.sharedText
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -55,11 +57,6 @@ fun ReadCopyScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
-            Text(
-                text = "NFC Scan",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(16.dp)
-            )
             // Display NFC Text
             Box(
                 modifier = Modifier
@@ -90,13 +87,16 @@ fun ReadCopyScreen(
             // Copy Button
             Button(
                 onClick = {
-                    if (nfcText.isNotBlank()||nfcText=="No tag scanned yet.") {
-                        val clipboard =
-                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    if (nfcText.isNotBlank() && nfcText != "No tag scanned yet.") {
+                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("NFC Text", nfcText)
                         clipboard.setPrimaryClip(clip)
+
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                    } else {
+                        haptic.performHapticFeedback(HapticFeedbackType.Reject)
+                        Toast.makeText(context, "Nothing to copy", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier
@@ -105,10 +105,14 @@ fun ReadCopyScreen(
             ) {
                 Text("Copy Text", fontSize = 20.sp)
             }
+            // Clear Clipboard Button
             Button(
                 onClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        Toast.makeText(context, "Clipboard has been cleared.", Toast.LENGTH_SHORT).show()
+                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    clipboard.setPrimaryClip(ClipData.newPlainText("", "")) // overwrite with empty clip
+
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    Toast.makeText(context, "Clipboard has been cleared.", Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
