@@ -1,7 +1,9 @@
 package com.example.nfcapp.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,11 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -29,6 +34,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -41,7 +47,6 @@ import com.example.nfcapp.viewmodel.NFCViewModel
 
 @Composable
 fun WriteProtectScreen(
-    statusText: String,
     inputText: String,
     remainingBlocks: Int,
     writtenStrLength: Int,
@@ -52,6 +57,7 @@ fun WriteProtectScreen(
 ) {
     val haptic = LocalHapticFeedback.current
     val isWriteMode by NFCViewModel.isWriteMode
+    val context = LocalContext.current
 
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -75,11 +81,35 @@ fun WriteProtectScreen(
             verticalArrangement = Arrangement.SpaceAround
         ) {
             // Status text
-            Text(
-                text = statusText,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(16.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (isWriteMode) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(22.dp)
+                            .padding(end = 8.dp),
+                        strokeWidth = 2.dp,
+                        color = Color.Cyan
+                    )
+                    Text(
+                        text = "Please tap an NFC tag",
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+
+                } else {
+                    Text(
+                        text = "Enter text to write",
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,28 +141,50 @@ fun WriteProtectScreen(
                     )
                 }
             }
+            // WRITE / CANCEL BUTTON
             Button(
                 onClick = {
-                    NFCViewModel.textToWrite.value = inputText
-                    NFCViewModel.lockTagAfterWrite.value = lockTag
-                    NFCViewModel.isWriteMode.value = true
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    if (isWriteMode) {
+                        // Cancel write mode
+                        NFCViewModel.isWriteMode.value = false
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        Toast.makeText(context, "Write canceled", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Enter write mode
+                        if (inputText.isNotBlank()) {
+                            NFCViewModel.textToWrite.value = inputText
+                            NFCViewModel.lockTagAfterWrite.value = lockTag
+                            NFCViewModel.isWriteMode.value = true
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        } else {
+                            Toast.makeText(context, "Please enter text first", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(60.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isWriteMode) Color.Red else Color(0xFF6750A4)
+                )
             ) {
-                Text("Write to Tag", fontSize = 18.sp)
+                Text(
+                    text = if (isWriteMode) "Cancel" else "Write to NFC",
+                    fontSize = 20.sp
+                )
             }
             // LOCK TAG CHECKBOX
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .clickable { onLockTagChanged(!lockTag) } // toggle when Row (or text) tapped
             ) {
                 Checkbox(
                     checked = lockTag,
                     onCheckedChange = onLockTagChanged,
-                    colors = CheckboxDefaults.colors(checkedColor = Color.Cyan)
+                    colors = CheckboxDefaults.colors(checkedColor = Color.Red)
                 )
                 Text(
                     text = "Lock tag after writing",
@@ -159,8 +211,7 @@ fun WriteProtectScreen(
                     text = "⚠️ IMPORTANT\nBackup your text! No data loss responsibility. Keep safe copy.",
                     fontSize = 18.sp,
                     lineHeight = 22.sp,
-                    color = Color.Black,
-
+                    color = Color.Black
                     )
             }
             Button(
@@ -177,7 +228,6 @@ fun WriteProtectScreen(
 @Composable
 fun WriteProtectScreenPreview() {
     WriteProtectScreen(
-        statusText = "Ready to write NFC tag",
         inputText = "",
         remainingBlocks = 0,
         writtenStrLength = 0,

@@ -36,8 +36,6 @@ import com.example.nfcapp.viewmodel.NFCViewModel
 
 @Composable
 fun ReadCopyScreen(
-    statusText: String,
-    nfcText: String,
     onNavigateToWrite: () -> Unit
 ) {
     val nfcText by NFCViewModel.sharedText
@@ -80,7 +78,6 @@ fun ReadCopyScreen(
                         .align(Alignment.TopStart)
                         .clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            Toast.makeText(context, "Tag simulated", Toast.LENGTH_SHORT).show()
                         }
                 )
             }
@@ -183,8 +180,6 @@ fun ReadCopyScreen(
 @Composable
 fun ReadPreview() {
     ReadCopyScreen(
-        statusText = "Ready to scan NFC tag",
-        nfcText = "(No scanned text)",
         onNavigateToWrite = {}
     )
 }

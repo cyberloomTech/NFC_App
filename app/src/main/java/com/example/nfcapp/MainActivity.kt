@@ -3,20 +3,17 @@ package com.example.nfcapp
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
-import android.nfc.NdefMessage
-import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
-import android.nfc.Tag
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
-import com.example.nfcapp.ui.navigation.PagerNavigation
-import java.nio.charset.Charset
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.nfcapp.ui.navigation.PagerNavigation
 import com.example.nfcapp.util.NFCWriter
 import com.example.nfcapp.viewmodel.NFCViewModel
 
@@ -65,9 +62,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: NFCViewModel = viewModel()
             PagerNavigation(
-                statusTextRead = _statusTextRead.value,
-                nfcText = _nfcText.value,
-                statusTextWrite = _statusTextWrite.value,
                 inputText = _inputText.value,
                 remainingBlocks = _remainingBlocks.value,
                 writtenStrLength = _writtenStrLength.value,
@@ -111,6 +105,7 @@ class MainActivity : ComponentActivity() {
                 NFCViewModel.textToWrite.value?.let { text ->
                     NFCWriter.writeNdefText(this, tag, text, NFCViewModel.lockTagAfterWrite.value)
                 }
+                NFCViewModel.isWriteMode.value = false
             } else {
                 // Read from NFC Tag
                 ndef?.connect()
@@ -132,33 +127,5 @@ class MainActivity : ComponentActivity() {
                 ndef?.close()
             }
         }
-    }
-
-
-    private fun writeNdefText(tag: Tag, text: String, lockTag: Boolean = false): Boolean {
-        return try {
-            val ndef = Ndef.get(tag)
-            ndef.connect()
-            val record = NdefRecord.createTextRecord("en", text)
-            val message = NdefMessage(arrayOf(record))
-            ndef.writeNdefMessage(message)
-            if (lockTag && ndef.isWritable) {
-                ndef.makeReadOnly()
-            }
-            ndef.close()
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
-
-    private fun readTextFromNdefRecord(record: NdefRecord): String {
-        val payload = record.payload
-        val textEncoding =
-            if ((payload[0].toInt() and 128) == 0) Charset.forName("UTF-8")
-            else Charset.forName("UTF-16")
-        val languageCodeLength = payload[0].toInt() and 63
-        return String(payload, languageCodeLength + 1, payload.size - languageCodeLength - 1, textEncoding)
     }
 }
