@@ -106,6 +106,7 @@ class MainActivity : ComponentActivity() {
                     NFCWriter.writeNdefText(this, tag, text, NFCViewModel.lockTagAfterWrite.value)
                 }
                 NFCViewModel.isWriteMode.value = false
+                Toast.makeText(context, "Write protected! Ready to use.", Toast.LENGTH_SHORT).show()
             } else {
                 // Read from NFC Tag
                 ndef?.connect()
