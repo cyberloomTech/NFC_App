@@ -7,6 +7,7 @@ import android.nfc.NfcAdapter
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
@@ -106,7 +107,7 @@ class MainActivity : ComponentActivity() {
                     NFCWriter.writeNdefText(this, tag, text, NFCViewModel.lockTagAfterWrite.value)
                 }
                 NFCViewModel.isWriteMode.value = false
-                Toast.makeText(context, "Write protected! Ready to use.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Write protected! Ready to use.", Toast.LENGTH_SHORT).show()
             } else {
                 // Read from NFC Tag
                 ndef?.connect()
