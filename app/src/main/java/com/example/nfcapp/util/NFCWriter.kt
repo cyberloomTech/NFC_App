@@ -1,22 +1,21 @@
 package com.example.nfcapp.util
 
-import android.content.Context
-import android.media.AudioManager
-import android.media.ToneGenerator
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
-import android.os.VibrationEffect
-import android.os.Vibrator
 import java.nio.charset.Charset
-import java.util.*
+import java.util.Locale
 
 
 object NFCWriter {
 
-    fun writeNdefText(context: Context, tag: Tag, text: String, lockAfterWrite: Boolean = false): Boolean {
+    fun writeNdefText(
+        tag: Tag,
+        text: String,
+        lockAfterWrite: Boolean
+    ): Boolean {
         try {
             val lang = Locale.getDefault().language
             val langBytes = lang.toByteArray(Charset.forName("US-ASCII"))
@@ -47,7 +46,6 @@ object NFCWriter {
                 }
 
                 ndef.close()
-                playSuccessFeedback(context)
                 return true
             } else {
                 val format = NdefFormatable.get(tag)
@@ -60,16 +58,5 @@ object NFCWriter {
             e.printStackTrace()
         }
         return false
-    }
-    private fun playSuccessFeedback(context: Context) {
-        // Vibration
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibrator?.vibrate(
-            VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE)
-        )
-
-        // Tone
-        val toneGen = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
-        toneGen.startTone(ToneGenerator.TONE_PROP_BEEP, 150)
     }
 }

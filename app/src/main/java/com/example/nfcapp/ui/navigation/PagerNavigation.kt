@@ -37,9 +37,7 @@ fun PagerNavigation(
     inputText: String,
     remainingBlocks: Int,
     writtenStrLength: Int,
-    lockTag: Boolean,
-    onInputTextChanged: (String) -> Unit,
-    onLockTagChanged: (Boolean) -> Unit
+    onInputTextChanged: (String) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
@@ -90,9 +88,7 @@ fun PagerNavigation(
                     inputText = inputText,
                     remainingBlocks = remainingBlocks,
                     writtenStrLength = writtenStrLength,
-                    lockTag = lockTag,
                     onInputTextChanged = onInputTextChanged,
-                    onLockTagChanged = onLockTagChanged,
                     onNavigateBack = { coroutineScope.launch { pagerState.animateScrollToPage(0) } }
                 )
             }
@@ -107,9 +103,7 @@ fun PagerNavigationPreview() {
         inputText = "",
         remainingBlocks = 0,
         writtenStrLength = 0,
-        lockTag = false,
-        onInputTextChanged = {},
-        onLockTagChanged = {}
+        onInputTextChanged = {}
     )
 }
 

@@ -1,12 +1,17 @@
 package com.example.nfcapp
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +23,7 @@ import com.example.nfcapp.ui.navigation.PagerNavigation
 import com.example.nfcapp.util.NFCWriter
 import com.example.nfcapp.viewmodel.NFCViewModel
 
+
 class MainActivity : ComponentActivity() {
 
     private var nfcAdapter: NfcAdapter? = null
@@ -25,7 +31,6 @@ class MainActivity : ComponentActivity() {
     private val _inputText = mutableStateOf("")
     private val _remainingBlocks = mutableIntStateOf(0)
     private val _writtenStrLength = mutableIntStateOf(0)
-    private var lockTag by mutableStateOf(false)
     private lateinit var pendingIntent: PendingIntent
     private lateinit var intentFiltersArray: Array<IntentFilter>
     private lateinit var techListsArray: Array<Array<String>>
@@ -58,13 +63,11 @@ class MainActivity : ComponentActivity() {
                 inputText = _inputText.value,
                 remainingBlocks = _remainingBlocks.intValue,
                 writtenStrLength = _writtenStrLength.intValue,
-                lockTag = lockTag,
                 onInputTextChanged = { newText ->
                     _inputText.value = newText
                     _writtenStrLength.intValue = newText.length
                     _remainingBlocks.intValue = (maxCapacity - newText.length) / 30
-                },
-                onLockTagChanged = { lockTag = it }
+                }
             )
         }
     }
@@ -75,7 +78,10 @@ class MainActivity : ComponentActivity() {
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent, PendingIntent.FLAG_MUTABLE
         )
-        val filters = arrayOf(IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED), IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED))
+        val filters = arrayOf(
+            IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED),
+            IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED)
+        )
         val techList = arrayOf(arrayOf<String>(Ndef::class.java.name))
         nfcAdapter?.enableForegroundDispatch(this, pendingIntent, filters, techList)
     }
@@ -96,7 +102,7 @@ class MainActivity : ComponentActivity() {
             if (NFCViewModel.isWriteMode.value) {
                 // Write to NFC Tag
                 NFCViewModel.textToWrite.value?.let { text ->
-                    NFCWriter.writeNdefText(this, tag, text, NFCViewModel.lockTagAfterWrite.value)
+                    NFCWriter.writeNdefText( tag, text, NFCViewModel.lockTagAfterWrite.value)
                 }
                 NFCViewModel.isWriteMode.value = false
                 Toast.makeText(this, "Write protected! Ready to use.", Toast.LENGTH_SHORT).show()
@@ -120,6 +126,26 @@ class MainActivity : ComponentActivity() {
                 }
                 ndef?.close()
             }
+            playSuccessFeedback(this);
         }
+    }
+
+    private fun playSuccessFeedback(context: Context) {
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // For Android 12 (API 31) and higher
+            val vibratorManager =
+                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            // For older Android versions
+            @Suppress("DEPRECATION")
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
+        // Define the vibration effect
+        val vibrationEffect = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE)
+
+        // Vibrate
+        vibrator.vibrate(vibrationEffect)
     }
 }
