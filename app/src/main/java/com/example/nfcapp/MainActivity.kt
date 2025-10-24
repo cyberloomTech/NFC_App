@@ -11,9 +11,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nfcapp.ui.navigation.PagerNavigation
 import com.example.nfcapp.util.NFCWriter
 import com.example.nfcapp.viewmodel.NFCViewModel
@@ -22,16 +22,9 @@ class MainActivity : ComponentActivity() {
 
     private var nfcAdapter: NfcAdapter? = null
     private val maxCapacity = 888 // NTAG216 max capacity
-
-    // State for ReadCopyScreen
-    private val _statusTextRead = mutableStateOf("Ready to scan NFC tag")
-    private val _nfcText = mutableStateOf("(No tag read yet)")
-
-    // State for WriteProtectScreen
-    private val _statusTextWrite = mutableStateOf("Ready to write NFC tag")
     private val _inputText = mutableStateOf("")
-    private val _remainingBlocks = mutableStateOf(0)
-    private val _writtenStrLength = mutableStateOf(0)
+    private val _remainingBlocks = mutableIntStateOf(0)
+    private val _writtenStrLength = mutableIntStateOf(0)
     private var lockTag by mutableStateOf(false)
     private lateinit var pendingIntent: PendingIntent
     private lateinit var intentFiltersArray: Array<IntentFilter>
@@ -61,16 +54,15 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            val viewModel: NFCViewModel = viewModel()
             PagerNavigation(
                 inputText = _inputText.value,
-                remainingBlocks = _remainingBlocks.value,
-                writtenStrLength = _writtenStrLength.value,
+                remainingBlocks = _remainingBlocks.intValue,
+                writtenStrLength = _writtenStrLength.intValue,
                 lockTag = lockTag,
                 onInputTextChanged = { newText ->
                     _inputText.value = newText
-                    _writtenStrLength.value = newText.length
-                    _remainingBlocks.value = (maxCapacity - newText.length) / 30
+                    _writtenStrLength.intValue = newText.length
+                    _remainingBlocks.intValue = (maxCapacity - newText.length) / 30
                 },
                 onLockTagChanged = { lockTag = it }
             )

@@ -3,6 +3,7 @@ package com.example.nfcapp.ui.navigation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nfcapp.R
@@ -47,43 +49,35 @@ fun PagerNavigation(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF2F2F2))
-                .padding(16.dp, 8.dp, 16.dp, 4.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(22.dp, 8.dp, 16.dp, 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Text(
+                text = "LoopO NFC",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
             // Logo
             Image(
                 painter = painterResource(id = R.drawable.loopo_logo),
                 contentDescription = stringResource(id = R.string.app_name),
                 modifier = Modifier
-                    .size(96.dp, 48.dp)
+                    .size(120.dp, 60.dp)
                     .padding(end = 12.dp)
             )
-
-            // App Name and Version
-            Column {
-                Text(
-                    text = "LoopO NFC",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Text(
-                    text = "v1-beta",
-                    fontSize = 16.sp,
-                    color = Color(0xFF666666)
-                )
-            }
         }
         TabRow(selectedTabIndex = pagerState.currentPage) {
             Tab(
                 selected = pagerState.currentPage == 0,
                 onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
-                text = { Text("Reader") }
+                text = { Text(text = "Reader", fontSize = 18.sp) }
             )
             Tab(
                 selected = pagerState.currentPage == 1,
                 onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } },
-                text = { Text("Writer") }
+                text = { Text(text = "Writer", fontSize = 18.sp) }
             )
         }
         HorizontalPager(state = pagerState) {
@@ -91,6 +85,7 @@ fun PagerNavigation(
                 0 -> ReadCopyScreen(
                     onNavigateToWrite = { coroutineScope.launch { pagerState.animateScrollToPage(1) } }
                 )
+
                 1 -> WriteProtectScreen(
                     inputText = inputText,
                     remainingBlocks = remainingBlocks,
@@ -104,3 +99,18 @@ fun PagerNavigation(
         }
     }
 }
+
+@Preview
+@Composable
+fun PagerNavigationPreview() {
+    PagerNavigation(
+        inputText = "",
+        remainingBlocks = 0,
+        writtenStrLength = 0,
+        lockTag = false,
+        onInputTextChanged = {},
+        onLockTagChanged = {}
+    )
+}
+
+
