@@ -111,7 +111,7 @@ fun ReadCopyScreen(
                     ) {
                         if (nfcText.isNotBlank() && nfcText != "Ready to read NFC tag...") {
                             Text(
-                                text = "→ Copy Text to Clipboard.\n→ Paste in Other App.\n→ Clear Clipboard.",
+                                text = "→ Copy Text to Clipboard.\n→ Paste in Target App.\n→ Clear Clipboard.",
                                 color = colorResource(R.color.gray_900),
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Start

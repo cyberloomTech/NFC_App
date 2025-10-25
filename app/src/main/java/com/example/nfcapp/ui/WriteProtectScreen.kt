@@ -79,7 +79,7 @@ fun WriteProtectScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(24.dp),
+            .padding(30.dp, 24.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -132,7 +132,6 @@ fun WriteProtectScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .padding(16.dp)
                         .focusRequester(focusRequester),
                     textStyle = LocalTextStyle.current.copy(fontSize = 20.sp),
                     singleLine = false
@@ -182,7 +181,7 @@ fun WriteProtectScreen(
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp),
+                        .height(60.dp)
                 ) {
                     Text(
                         text = if (isWriteMode) "CANCEL" else "WRITE NFC TAG",
@@ -236,7 +235,7 @@ fun WriteProtectScreen(
                         color = Color(0xFFFFF59D), // light yellow
                         shape = RoundedCornerShape(20.dp)
                     )
-                    .padding(10.dp)
+                    .padding(15.dp)
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
