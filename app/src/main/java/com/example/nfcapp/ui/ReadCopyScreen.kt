@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,6 +32,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,7 +52,7 @@ fun ReadCopyScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(colorResource(R.color.light_grey))
             .padding(30.dp, 24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -151,7 +151,11 @@ fun ReadCopyScreen(
                     .fillMaxWidth()
                     .height(60.dp)
             ) {
-                Text("COPY TEXT", fontSize = 28.sp)
+                Text(
+                    text = "COPY TEXT",
+                    fontWeight = FontWeight.Light,
+                    fontSize = 28.sp
+                )
             }
             // Clear Clipboard Button
             Button(
@@ -177,7 +181,11 @@ fun ReadCopyScreen(
                     .fillMaxWidth()
                     .height(60.dp)
             ) {
-                Text("CLEAR CLIPBOARD", fontSize = 28.sp)
+                Text(
+                    text = "CLEAR CLIPBOARD",
+                    fontWeight = FontWeight.Light,
+                    fontSize = 28.sp
+                )
             }
             Column(
                 modifier = Modifier

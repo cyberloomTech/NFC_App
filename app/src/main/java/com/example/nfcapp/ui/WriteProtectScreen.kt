@@ -24,7 +24,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,14 +41,18 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nfcapp.R
 import com.example.nfcapp.viewmodel.NFCViewModel
-
 
 
 @Composable
@@ -78,9 +81,12 @@ fun WriteProtectScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(30.dp, 24.dp),
-        contentAlignment = Alignment.Center
+            .background(colorResource(R.color.light_grey))
+            .padding(30.dp, 24.dp)
+            .background(
+                color = colorResource(R.color.light_grey)
+            ),
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -185,6 +191,7 @@ fun WriteProtectScreen(
                 ) {
                     Text(
                         text = if (isWriteMode) "CANCEL" else "WRITE NFC TAG",
+                        fontWeight = FontWeight.Light,
                         fontSize = 28.sp
                     )
                 }
@@ -216,7 +223,7 @@ fun WriteProtectScreen(
                         colors = CheckboxDefaults.colors(checkedColor = Color.Red)
                     )
                     Text(
-                        text = "LOCK NFC TAG",
+                        text = "WRITE-PROTECT NFC TAG",
                         fontSize = 22.sp,
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -242,16 +249,14 @@ fun WriteProtectScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "IMPORTANT",
-                        fontSize = 22.sp,
-                        lineHeight = 22.sp,
-                        textAlign = TextAlign.Center,
-                        color = Color(0xFF3D3D3C),
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Back up your text first.\nSave a copy on paper or in a secure place. It cannot be recovered.",
-                        fontSize = 20.sp,
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("WARNING! ")
+                            }
+                            append("Locking an NFC tag is permanent and makes it read-only.\n")
+                            append("You cannot change the data afterwards and will need a new LoopO to store different text.")
+                        },
+                        fontSize = 18.sp,
                         lineHeight = 22.sp,
                         textAlign = TextAlign.Center,
                         color = Color(0xFF3D3D3C)

@@ -15,10 +15,8 @@ import android.os.VibratorManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.example.nfcapp.ui.navigation.PagerNavigation
 import com.example.nfcapp.util.NFCWriter
 import com.example.nfcapp.viewmodel.NFCViewModel
@@ -102,7 +100,7 @@ class MainActivity : ComponentActivity() {
             if (NFCViewModel.isWriteMode.value) {
                 // Write to NFC Tag
                 NFCViewModel.textToWrite.value?.let { text ->
-                    NFCWriter.writeNdefText( tag, text, NFCViewModel.lockTagAfterWrite.value)
+                    NFCWriter.writeNdefText(this, tag, text, NFCViewModel.lockTagAfterWrite.value)
                 }
                 NFCViewModel.isWriteMode.value = false
                 Toast.makeText(this, "Wrote Successfully!", Toast.LENGTH_SHORT).show()

@@ -14,12 +14,15 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -66,16 +69,37 @@ fun PagerNavigation(
                     .padding(end = 12.dp)
             )
         }
-        TabRow(selectedTabIndex = pagerState.currentPage) {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            containerColor = colorResource(R.color.light_grey),
+            indicator = { tabPositions ->
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = colorResource(R.color.medium_grey)
+                )
+            }
+        ) {
             Tab(
                 selected = pagerState.currentPage == 0,
                 onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
-                text = { Text(text = "Reader", fontSize = 18.sp) }
+                text = {
+                    Text(
+                        text = "Reader",
+                        fontSize = 18.sp,
+                        color = colorResource(R.color.medium_grey)
+                    )
+                }
             )
             Tab(
                 selected = pagerState.currentPage == 1,
                 onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } },
-                text = { Text(text = "Writer", fontSize = 18.sp) }
+                text = {
+                    Text(
+                        text = "Writer",
+                        fontSize = 18.sp,
+                        color = colorResource(R.color.medium_grey)
+                    )
+                }
             )
         }
         HorizontalPager(state = pagerState) {
