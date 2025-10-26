@@ -129,21 +129,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun playSuccessFeedback(context: Context) {
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // For Android 12 (API 31) and higher
-            val vibratorManager =
-                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            // For older Android versions
-            @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-
-        // Define the vibration effect
-        val vibrationEffect = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE)
-
-        // Vibrate
-        vibrator.vibrate(vibrationEffect)
+        val vibrator = getSystemService(Vibrator::class.java)
+        vibrator?.vibrate(
+            VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE)
+        )
     }
 }

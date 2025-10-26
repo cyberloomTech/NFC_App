@@ -132,7 +132,19 @@ fun WriteProtectScreen(
                 // Input text field
                 OutlinedTextField(
                     value = inputText,
-                    onValueChange = onInputTextChanged,
+                    onValueChange = { newText ->
+                        if (newText.length <= 888) {
+                            // If the text is within the limit, call the original update function
+                            onInputTextChanged(newText)
+                        } else {
+                            // If the text exceeds the limit, show a toast message
+                            Toast.makeText(
+                                context,
+                                "Maximum length of 888 characters reached",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    },
                     label = { Text("Enter text to write") },
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                     modifier = Modifier
@@ -233,16 +245,6 @@ fun WriteProtectScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
-                    .border(
-                        width = 2.dp,
-                        color = Color(0xFFFF9800), // orange
-                        shape = RoundedCornerShape(20.dp)
-                    )
-                    .background(
-                        color = Color(0xFFFFF59D), // light yellow
-                        shape = RoundedCornerShape(20.dp)
-                    )
-                    .padding(15.dp)
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -251,15 +253,13 @@ fun WriteProtectScreen(
                     Text(
                         text = buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("WARNING! ")
+                                append("⚠\uFE0F BACK UP YOUR PASSWORD\n")
                             }
-                            append("Locking an NFC tag is permanent and makes it read-only.\n")
-                            append("You cannot change the data afterwards and will need a new LoopO to store different text.")
+                            append("Save a copy on paper or elsewhere.\nIt cannot be recovered if lost.\nLoopO is not responsible for any losses.")
                         },
                         fontSize = 18.sp,
-                        lineHeight = 22.sp,
-                        textAlign = TextAlign.Center,
-                        color = Color(0xFF3D3D3C)
+                        lineHeight = 24.sp,
+                        textAlign = TextAlign.Center
                     )
                 }
             }

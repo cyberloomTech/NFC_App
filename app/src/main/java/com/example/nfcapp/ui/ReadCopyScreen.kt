@@ -189,8 +189,7 @@ fun ReadCopyScreen(
             }
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(240.dp),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -215,6 +214,7 @@ fun ReadCopyScreen(
                 Text(
                     text = "www.loopo.ch\ninfo@loopo.ch",
                     fontSize = 18.sp,
+                    textAlign = TextAlign.Center,
                     color = colorResource(id = R.color.gray_700)
                 )
             }
