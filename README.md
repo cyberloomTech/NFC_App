@@ -2,7 +2,6 @@
 
 A simple NFC reader/writer Android app built with **Kotlin** and **Jetpack Compose**, optimized for NTAG216 tags.
 
----
 
 ## ✨ Features
 - Read and write NDEF text records to NFC tags
@@ -11,13 +10,11 @@ A simple NFC reader/writer Android app built with **Kotlin** and **Jetpack Compo
 - Clipboard integration (copy & clear)
 - Jetpack Compose UI with smooth navigation
 
----
 
 ## 🛠️ Requirements
 - Android 5.0 (API 21) or higher
 - A physical device with NFC support (emulator **cannot** emulate NFC)
 
----
 
 ## 🚀 Building the App
 1. Clone or extract the project.
@@ -26,7 +23,6 @@ A simple NFC reader/writer Android app built with **Kotlin** and **Jetpack Compo
 4. Enable **NFC** on the phone.
 5. Press **Run ▶** to install and launch the app.
 
----
 
 ## 📲 How to Use
 1. Open the app — two screens appear: **READER** and **WRITER**.
@@ -37,14 +33,12 @@ A simple NFC reader/writer Android app built with **Kotlin** and **Jetpack Compo
    - Wait for vibration feedback.
 4. To lock the tag, check “WRITE-PROTECT NFC TAG”
 
----
 
 ## 🔔 Notes
 - NFC simulation does not work on Android Emulator.
 - All feedback is via vibration — **no sound is used**.
 - For NTAG216, capacity ≈ 888 bytes of text data.
 
----
 
 ## 🧾 License
 
