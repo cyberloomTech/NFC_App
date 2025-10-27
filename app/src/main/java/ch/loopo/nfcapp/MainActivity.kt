@@ -7,15 +7,12 @@ import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
-import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.os.VibratorManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import ch.loopo.nfcapp.ui.navigation.PagerNavigation
 import ch.loopo.nfcapp.util.NFCWriter
@@ -25,10 +22,7 @@ import ch.loopo.nfcapp.viewmodel.NFCViewModel
 class MainActivity : ComponentActivity() {
 
     private var nfcAdapter: NfcAdapter? = null
-    private val maxCapacity = 888 // NTAG216 max capacity
     private val _inputText = mutableStateOf("")
-    private val _remainingBlocks = mutableIntStateOf(0)
-    private val _writtenStrLength = mutableIntStateOf(0)
     private lateinit var pendingIntent: PendingIntent
     private lateinit var intentFiltersArray: Array<IntentFilter>
     private lateinit var techListsArray: Array<Array<String>>
@@ -37,11 +31,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-//        if (nfcAdapter == null) {
-//            Toast.makeText(this, "NFC not supported on this device", Toast.LENGTH_LONG).show()
-//            finish()
-//            return
-//        }
+        if (nfcAdapter == null) {
+            Toast.makeText(this, "NFC not supported on this device", Toast.LENGTH_LONG).show()
+        }
         pendingIntent = PendingIntent.getActivity(
             this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
@@ -59,12 +51,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             PagerNavigation(
                 inputText = _inputText.value,
-                remainingBlocks = _remainingBlocks.intValue,
-                writtenStrLength = _writtenStrLength.intValue,
                 onInputTextChanged = { newText ->
                     _inputText.value = newText
-                    _writtenStrLength.intValue = newText.length
-                    _remainingBlocks.intValue = (maxCapacity - newText.length) / 30
                 }
             )
         }

@@ -2,7 +2,6 @@ package ch.loopo.nfcapp.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -58,10 +57,7 @@ import ch.loopo.nfcapp.viewmodel.NFCViewModel
 @Composable
 fun WriteProtectScreen(
     inputText: String,
-    remainingBlocks: Int,
-    writtenStrLength: Int,
-    onInputTextChanged: (String) -> Unit,
-    onNavigateBack: () -> Unit
+    onInputTextChanged: (String) -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     val isWriteMode by NFCViewModel.isWriteMode
@@ -154,18 +150,6 @@ fun WriteProtectScreen(
                     textStyle = LocalTextStyle.current.copy(fontSize = 20.sp),
                     singleLine = false
                 )
-                // Remaining 30-char blocks
-//                Box(
-//                    modifier = Modifier
-//                        .padding(18.dp, 10.dp)
-//                ) {
-//                    Text(
-//                        text = "$writtenStrLength / 888\nRemained $remainingBlocks blocks",
-//                        fontSize = 18.sp,
-//                        textAlign = TextAlign.End,
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
-//                }
 
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -321,9 +305,6 @@ fun ConfirmDialog(
 fun WriteProtectScreenPreview() {
     WriteProtectScreen(
         inputText = "",
-        remainingBlocks = 0,
-        writtenStrLength = 0,
-        onInputTextChanged = {},
-        onNavigateBack = {}
+        onInputTextChanged = {}
     )
 }

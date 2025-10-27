@@ -38,8 +38,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun PagerNavigation(
     inputText: String,
-    remainingBlocks: Int,
-    writtenStrLength: Int,
     onInputTextChanged: (String) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -110,10 +108,7 @@ fun PagerNavigation(
 
                 1 -> WriteProtectScreen(
                     inputText = inputText,
-                    remainingBlocks = remainingBlocks,
-                    writtenStrLength = writtenStrLength,
-                    onInputTextChanged = onInputTextChanged,
-                    onNavigateBack = { coroutineScope.launch { pagerState.animateScrollToPage(0) } }
+                    onInputTextChanged = onInputTextChanged
                 )
             }
         }
@@ -125,8 +120,6 @@ fun PagerNavigation(
 fun PagerNavigationPreview() {
     PagerNavigation(
         inputText = "",
-        remainingBlocks = 0,
-        writtenStrLength = 0,
         onInputTextChanged = {}
     )
 }
