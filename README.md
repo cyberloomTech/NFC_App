@@ -1,6 +1,6 @@
-# NFC App
+# LOOPO NFC
 
-A simple NFC reader/writer Android app built with **Kotlin** and **Jetpack Compose**, optimized for NTAG216 tags.
+A NFC reader/writer Android app built with **Kotlin** and **Jetpack Compose**, optimized for NTAG216 tags.
 
 
 ## ✨ Features
