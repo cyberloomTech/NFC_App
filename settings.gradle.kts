@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NFC App"
+rootProject.name = "LoopO NFC"
 include(":app")
  

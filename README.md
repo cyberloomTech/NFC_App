@@ -18,7 +18,7 @@ A simple NFC reader/writer Android app built with **Kotlin** and **Jetpack Compo
 
 ## 🚀 Building the App
 1. Clone or extract the project.
-2. Open the folder in **Android Studio**.
+2. Open the folder in **NFC_App**.
 3. Connect an NFC-enabled Android device.
 4. Enable **NFC** on the phone.
 5. Press **Run ▶** to install and launch the app.

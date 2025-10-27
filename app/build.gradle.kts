@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.nfcapp"
+    namespace = "ch.loopo.nfcapp"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.nfcapp"
+        applicationId = "ch.loopo.nfcapp"
         minSdk = 21
         targetSdk = 36
         versionCode = 1
